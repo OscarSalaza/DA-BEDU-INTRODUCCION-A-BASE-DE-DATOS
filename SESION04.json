@@ -1,0 +1,205 @@
+
+#RETO 1
+
+#Fecha, nombre y texto de cada comentario.
+
+{
+ date: 1,
+ name: 1,
+ text: 1,
+ _id: 0
+}
+
+#Título, elenco y año de cada película.
+
+{
+ title: 1,
+ cast: 1,
+ year: 1,
+ _id: 0
+}
+
+#Nombre y contraseña de cada usuario.
+
+{
+ name: 1,
+ password: 1,
+ _id: 0
+}
+
+#RETO 2
+
+#¿Qué comentarios ha hecho Greg Powell?
+
+{
+ name: 'Greg Powell'
+}
+
+#¿Qué comentarios han hecho Greg Powell o Mercedes Tyler?
+
+{
+ $or: [
+  {
+   name: 'Greg Powell'
+  },
+  {
+   name: 'Mercedes Tayler'
+  }
+ ]
+}
+
+#¿Cuál es el máximo número de comentarios en una película?
+
+PROJECT
+{
+ num_mflix_comments: 1
+}
+SORT
+{
+ num_mflix_comments: -1
+}
+LIMIT
+1
+
+Respuesta: 456
+
+#¿Cuál es título de las cinco películas más comentadas?
+
+{
+ title: 1,
+ num_mflix_comments: 1,
+ _id: 0
+}
+SORT
+{
+ num_mflix_comments: -1
+}
+LIMIT
+5
+
+Respuesta:
+title:"The Mask"
+num_mflix_comments:456
+title:"Dumb & Dumber"
+num_mflix_comments:450
+title:"The Unborn"
+num_mflix_comments:447
+title:"About a Boy"
+num_mflix_comments:441
+title:"8 Mile"
+num_mflix_comments:441
+
+
+#EJERCICIOS
+
+#Obtén los datos de contacto de cada compañía.
+
+{
+ project: {
+  name: 1,
+  email_address: 1,
+  phone_number: 1,
+  _id: 0
+ }
+}
+
+
+#Obtén el nombre de todas las compañias fundadas en octubre.
+{
+ filter: {
+  founded_month: 10
+ },
+ project: {
+  name: 1
+ }
+}
+
+#Obtén el nombre de todas las compañías fundadas en 2008.
+{
+ filter: {
+  founded_year: 2008
+ },
+ project: {
+  name: 1
+ }
+}
+
+
+#Obtén todas las compañías fundadas en octubre del 2008.
+{
+ filter: {
+  $and: [
+   {
+    founded_month: 10
+   },
+   {
+    founded_year: 2008
+   }
+  ]
+ },
+ project: {
+  name: 1
+ }
+}
+
+#Obtén todas las compañias con más de 50 empleados.
+
+{
+ filter: {
+  number_of_employees: {
+   $gt: 50
+  }
+ },
+ project: {
+  name: 1,
+  number_of_employees: 1
+ }
+}
+
+
+
+#Obtén la empresa con el menor número de empleados.
+
+{
+ project: {
+  name: 1,
+  number_of_employees: 1
+ },
+ sort: {
+  number_of_employees: 1
+ },
+ limit: 1
+}
+
+#la consulta pasada tiene como resultado NULL número de empleados
+
+{
+ filter: {
+  number_of_employees: {
+   $gte: 0
+  }
+ },
+ project: {
+  name: 1,
+  number_of_employees: 1
+ },
+ sort: {
+  number_of_employees: 1
+ },
+ limit: 1
+}
+
+#Obtén la empresa con el mayor número de empleados.
+
+{
+ project: {
+  name: 1,
+  number_of_employees: 1
+ },
+ sort: {
+  number_of_employees: -1
+ },
+ limit: 1
+}
+
+#No hay colecciones con tweets o historias.
