@@ -1,0 +1,96 @@
+
+#RETO 1
+
+#Propiedades que no permitan fiestas.
+
+{
+ filter: {
+  house_rules: RegExp('no parties', i)
+ }
+}
+
+#Propiedades que admitan mascotas.
+
+{
+ filter: {
+  house_rules: {
+   $not: RegExp('not? pets?', i)
+  }
+ }
+}
+
+#NOTA: BUSCA una expresión regular que no contgenga "not pets"
+		La expresión daría por sentado que si no lo prohibe, está permitido
+		La expresión propuesta como solución en bedu "pets allowed" sería incorrecta
+		puesto que incluiría también las descripciones con "no pets allowed".
+
+#Propiedades que no permitan fumadores.
+
+{
+ filter: {
+  house_rules: RegExp('no smoking', i)
+ }
+}
+
+#Propiedades que no permitan fiestas ni fumadores.
+
+{
+ filter: {
+  house_rules: RegExp('no parties|no smoking', i)
+ }
+}
+
+
+#RETO 2
+
+#Usando la colección sample_airbnb.listingsAndReviews, agrega un filtro que permita obtener todas las publicaciones que tengan 50 o más comentarios, que la valoración sea mayor o igual a 80, que cuenten con conexión a Internet vía cable y estén ubicada en Brazil.
+
+{
+ filter: {
+  number_of_reviews: {
+   $gte: 50
+  },
+  'review_scores.review_scores_rating': {
+   $gte: 80
+  },
+  amenities: RegExp('ethernet', i),
+  'address.country_code': 'BR'
+ }
+}
+
+#Reto 3
+
+#Usando la colección sample_airbnb.listingsAndReviews, mediante el uso de agregaciones, encontrar el número de publicaciones que tienen conexión a Internet, sea desde Wifi o desde cable (Ethernet)
+
+
+[{
+    $match: {
+        amenities: {
+            $in: ["Wifi", /ethernet/i]
+        }
+    }
+}, {
+    $count: 'Publicaciones con Internet'
+}]
+
+#Ejercicios
+
+#El proyecto consiste en obtener todas las publicaciones que tengan 50 o más comentarios, que la valoración sea mayor o igual a 80, que cuenten con conexión a Internet vía cable y estén ubicadas en Brazil
+
+[{
+    $match: {
+        number_of_reviews: {
+            $gte: 50
+        },
+        "review_scores.review_scores_rating": {
+            $gte: 80
+        },
+        "address.country_code": "BR"
+    }
+}, {
+    $match: {
+        amenities: {
+            $in: ["Wifi", /ethernet/i]
+        }
+    }
+}]
