@@ -1,0 +1,112 @@
+
+--------------RETO 1----------------
+
+Con base en el ejemplo 1, modifica el agrupamiento para que muestre el costo promedio por habitación por país de las propiedades de tipo casa.
+
+[{
+    $match: {
+        property_type: "House"
+    }
+}, {
+    $match: {
+        bedrooms: {
+            $gte: 1
+        }
+    }
+}, {
+    $addFields: {
+        room_cost: {
+            $divide: ["$price", "$bedrooms"]
+        }
+    }
+}, {
+    $group: {
+        _id: "$address.country",
+        costroom_country: {
+            $avg: "$room_cost"
+        }
+    }
+}, {
+    $addFields: {
+        Country: "$_id"
+    }
+}, {
+    $project: {
+        _id: 0,
+    }
+}]
+
+-----------------RETO 2-------------------
+
+Usando las colecciones comments y users, se requiere conocer el correo y contraseña de cada persona que realizó un comentario. Construye un pipeline que genere como resultado estos datos.
+
+[{
+    $lookup: {
+        from: 'users',
+        localField: 'email',
+        foreignField: 'email',
+        as: 'users'
+    }
+}, {
+    $addFields: {
+        user: {
+            "$arrayElemAt": ["$users", 0]
+        }
+    }
+}, {
+    $addFields: {
+        password: "$user.password"
+    }
+}, {
+    $project: {
+        _id: 0,
+        text: 1,
+        email: 1,
+        password: 1
+
+    }
+}]
+
+-----------------RETO 3-----------------------
+
+Usando el pipeline que generaste en el Reto 2, genera la vista correspondiente.
+
+
+NOTA: en la sesión se mencionó que no era necesario entregar evidencia de este reto.
+
+
+-----------------EJERCICIO--------------------------
+
+[{
+    $addFields: {
+        pais_genero: [{
+                $arrayElemAt: ["$countries", 0]
+            },
+            {
+                $arrayElemAt: ["$genres", 0]
+            }
+        ]
+
+    }
+}, {
+    $group: {
+        _id: "$pais_genero",
+        peliculas: {
+            $sum: 1
+        }
+    }
+}, {
+    $addFields: {
+        pais: {
+            $arrayElemAt: ["$_id", 0]
+        },
+        genero: {
+            $arrayElemAt: ["$_id", 1]
+        }
+
+    }
+}, {
+    $project: {
+        _id: 0
+    }
+}]
